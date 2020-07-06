@@ -18,7 +18,9 @@ env GOOS=darwin GOARCH=amd64 go build -o jiraintegration  cmd/jiraintegration/ma
 
 # Property files
 jiraproperties.json -> contains the consumer key and private key
+
 epic.json -> contains information about what the epic needs to be created with.
+
 issue.json -> contains information about what the story needs to be created with.
 
 # JIRA Secrets
