@@ -1,0 +1,6 @@
+{
+    "summary": "This is an Issue title",
+    "description": "This is an Issue Description",
+    "jiraProjectKey": "DEMO",
+    "type": "Story"
+}
