@@ -57,3 +57,50 @@ func createEpic(jiraURL string, log *logrus.Entry) {
 	}
 	log.Infof("Epic Created with details -> %s: and ID: %+v\n", issue.Key, issue.ID)
 }
+
+func createIssueStory(jiraURL string, log *logrus.Entry) {
+	jiraDetails, err := getFromProperty("issue.json", log)
+	summary := jiraDetails.Summary
+	description := jiraDetails.Description
+	if err != nil {
+		log.Fatalf("Error occurred reading issue json file: " + err.Error())
+	}
+	// summary has a field length restriction of 254
+	// https://confluence.atlassian.com/jirasoftwareserver071/advanced-searching-fields-reference-800707156.html
+	if len(summary) > 254 {
+		summary = summary[0:244]
+	}
+	// description has a character limit restriction of 32766
+	// https://community.atlassian.com/t5/Jira-questions/JIRA-Character-Limits-on-Comments-and-Description-32-767/qaq-p/259057
+	if len(description) > 32766 {
+		description = description[0:32766]
+	}
+
+	jiraClient := getJIRAClient(jiraURL, log)
+	i := jira.Issue{
+		Fields: &jira.IssueFields{
+			Description: description,
+			Type: jira.IssueType{
+				Name: jiraDetails.Type,
+			},
+			Project: jira.Project{
+				Key: jiraDetails.JiraProjectKey,
+			},
+			Summary: summary,
+		},
+	}
+
+	issue, resp, err := jiraClient.Issue.Create(&i)
+	if err != nil {
+		log.Error("Some error occurred creating the JIRA ticket: " + err.Error())
+		responeseByte, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Error("Error occurred reading the response body: " + err.Error())
+			return
+		}
+		log.Info("JIRA Error Response body for creation: " + string(responeseByte))
+		return
+	}
+
+	log.Infof("Story created with key: %s: ID: %+v\n", issue.Key, issue.ID)
+}

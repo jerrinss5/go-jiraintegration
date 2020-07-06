@@ -34,10 +34,7 @@ func Run() {
 	var jiraURL, jiraType string
 	log.Infof("GO JIRA integration example")
 	flag.StringVarP(&jiraURL, "jiraurl", "j", "", "URL of the JIRA server")
-	flag.StringVarP(&jiraType, "type", "t", "", "Takes in either type epic or project")
-	// flag.StringVarP(&summary, "summary", "tl", "", "Summary for the epic")
-	// flag.StringVarP(&desc, "desc", "d", "", "Description for the epic")
-	// flag.StringVarP(&epicName, "name", "n", "", "Name for the epic")
+	flag.StringVarP(&jiraType, "type", "t", "", "Takes in either type epic, story or fetch")
 	flag.PrintDefaults()
 	flag.Parse()
 
@@ -47,10 +44,11 @@ func Run() {
 
 	switch jiraType {
 	case "epic":
-		log.Tracef("Epic JIRA Type is selected!")
+		log.Tracef("Create Epic JIRA Type is selected!")
 		createEpic(jiraURL, log)
-	case "project":
-		log.Infof("Project JIRA Type is selected!")
+	case "story":
+		log.Infof("Create Issue JIRA Type is selected!")
+		createIssueStory(jiraURL, log)
 	case "fetch":
 		log.Infof("Get project details is selected")
 		getProjects(jiraURL, log)
