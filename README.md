@@ -1,4 +1,4 @@
-# JIRA integration example
+# GO JIRA integration example
 This example is based on github.com/andygrunwald/go-jira work.
 
 The example has options to fetch the projects, create an epic or create a story.
